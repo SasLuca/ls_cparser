@@ -1,19 +1,12 @@
 cmake_minimum_required(VERSION 3.15)
-project(ls_cparser CXX)
+project(ls_cparser C)
 
 set(CMAKE_C_STANDARD 99)
-set(CMAKE_CXX_EXTENSIONS OFF)
 
-add_library(ls_cparser INTERFACE)
-target_include_directories(ls_cparser INTERFACE sources)
+add_library(ls_cparser ls_cparser.c ls_cparser.h)
+target_include_directories(ls_cparser PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/code)
 
+# For testing, in CLion set `-DLS_CPARSER_TESTS=on` under `Settings > Build, Execution, Deployment > CMake > CMake Options`
 if(LS_CPARSER_TESTS)
-    set(CMAKE_CXX_STANDARD 17)
-
-    add_subdirectory(dependencies/Catch2)
-
-    file(GLOB_RECURSE TEST_SOURCES CONFIGURE_DEPENDS tests/*)
-
-    add_executable(test_tokenizer tests/catch2_main.cpp tests/tokenizer_tests.cpp)
-    target_link_libraries(test_tokenizer PRIVATE Catch2 ls_cparser)
+    add_subdirectory(tests)
 endif()
